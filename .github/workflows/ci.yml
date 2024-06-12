@@ -46,5 +46,5 @@ jobs:
       if: runner.os == 'Windows'
       shell: pwsh
       run: |
-        .\venv\Scripts\Activate.ps1
+        .\venv\Scripts\Activate
         pytest
