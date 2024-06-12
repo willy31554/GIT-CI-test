@@ -1,0 +1,35 @@
+# .github/workflows/ci.yml
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        if [ $RUNNER_OS == 'Windows' ]; then .\venv\Scripts\activate; else source venv/bin/activate; fi
+        pip install pytest
+
+    - name: Run tests
+      run: |
+        if [ $RUNNER_OS == 'Windows' ]; then .\venv\Scripts\activate; else source venv/bin/activate; fi
+        pytest
