@@ -21,30 +21,13 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install dependencies on Ubuntu
-      if: runner.os != 'Windows'
+    - name: Install dependencies
       run: |
         python -m venv venv
-        source venv/bin/activate
+        if [ $RUNNER_OS == 'Windows' ]; then .\venv\Scripts\activate; else source venv/bin/activate; fi
         pip install pytest
 
-    - name: Install dependencies on Windows
-      if: runner.os == 'Windows'
-      shell: pwsh
+    - name: Run tests
       run: |
-        python -m venv venv
-        .\venv\Scripts\Activate
-        pip install pytest
-
-    - name: Run tests on Ubuntu
-      if: runner.os != 'Windows'
-      run: |
-        source venv/bin/activate
-        pytest
-
-    - name: Run tests on Windows
-      if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        .\venv\Scripts\Activate
+        if [ $RUNNER_OS == 'Windows' ]; then .\venv\Scripts\activate; else source venv/bin/activate; fi
         pytest
