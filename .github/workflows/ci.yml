@@ -1,5 +1,3 @@
-# .github/workflows/ci.yml
-
 name: CI
 
 on:
@@ -23,13 +21,28 @@ jobs:
       with:
         python-version: '3.9'
 
-    - name: Install dependencies
+    - name: Install dependencies on Ubuntu
+      if: runner.os != 'Windows'
       run: |
         python -m venv venv
-        if [ $RUNNER_OS == 'Windows' ]; then .\venv\Scripts\activate; else source venv/bin/activate; fi
+        source venv/bin/activate
         pip install pytest
 
-    - name: Run tests
+    - name: Install dependencies on Windows
+      if: runner.os == 'Windows'
       run: |
-        if [ $RUNNER_OS == 'Windows' ]; then .\venv\Scripts\activate; else source venv/bin/activate; fi
+        python -m venv venv
+        .\venv\Scripts\Activate.ps1
+        pip install pytest
+
+    - name: Run tests on Ubuntu
+      if: runner.os != 'Windows'
+      run: |
+        source venv/bin/activate
+        pytest
+
+    - name: Run tests on Windows
+      if: runner.os == 'Windows'
+      run: |
+        .\venv\Scripts\Activate.ps1
         pytest
