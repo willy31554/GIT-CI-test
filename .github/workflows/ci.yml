@@ -30,6 +30,7 @@ jobs:
 
     - name: Install dependencies on Windows
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         python -m venv venv
         .\venv\Scripts\Activate.ps1
@@ -43,6 +44,7 @@ jobs:
 
     - name: Run tests on Windows
       if: runner.os == 'Windows'
+      shell: pwsh
       run: |
         .\venv\Scripts\Activate.ps1
         pytest
