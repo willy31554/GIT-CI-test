@@ -8,14 +8,26 @@ on:
 
 jobs:
   test:
-    runs-on: windows-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v2
 
     - name: Set up Python
-      shell: pwsh
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
       run: |
         python -m venv venv
-        if ($env:RUNNER_OS -eq "Windows") { .\venv\Scripts\Activate } else { source venv/bin/activate }
+        if [ "${{ runner.os }}" == 'Windows' ]; then .\venv\Scripts\Activate; else source venv/bin/activate; fi &&
         pip install pytest
+
+    - name: Run tests
+      run: |
+        if [ "${{ runner.os }}" == 'Windows' ]; then .\venv\Scripts\Activate; else source venv/bin/activate; fi &&
+        pytest
